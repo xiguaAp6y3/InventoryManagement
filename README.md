@@ -1,12 +1,13 @@
 # Inventory Management API
 
-Python Flask + Azure SQL Server 仓库管理系统后端。
+Python 3.13 + Flask + Azure SQL Server 仓库管理系统后端。
 
 ## 快速开始
 
-1. 创建虚拟环境并安装依赖：
+1. 确认使用 Python 3.13，然后创建虚拟环境并安装依赖：
 
 ```powershell
+python --version
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
@@ -74,4 +75,3 @@ POST /api/stock-in
 POST /api/stock-out
 GET  /api/stock-movements
 ```
-
