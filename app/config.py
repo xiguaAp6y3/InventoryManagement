@@ -7,25 +7,31 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def _build_azure_sql_uri():
-    server = os.getenv("AZURE_SQL_SERVER", "")
-    database = os.getenv("AZURE_SQL_DATABASE", "")
-    username = os.getenv("AZURE_SQL_USERNAME", "")
-    password = os.getenv("AZURE_SQL_PASSWORD", "")
-    driver = os.getenv("AZURE_SQL_DRIVER", "ODBC Driver 18 for SQL Server")
-    encrypt = os.getenv("AZURE_SQL_ENCRYPT", "yes")
-    trust_cert = os.getenv("AZURE_SQL_TRUST_SERVER_CERTIFICATE", "no")
+def _env(name, default=""):
+    return os.getenv(name, default).strip()
 
-    odbc = (
-        f"DRIVER={{{driver}}};"
-        f"SERVER=tcp:{server},1433;"
-        f"DATABASE={database};"
-        f"UID={username};"
-        f"PWD={password};"
-        f"Encrypt={encrypt};"
-        f"TrustServerCertificate={trust_cert};"
-        "Connection Timeout=30;"
-    )
+
+def _build_azure_sql_uri():
+    server = _env("AZURE_SQL_SERVER")
+    database = _env("AZURE_SQL_DATABASE")
+    username = _env("AZURE_SQL_USERNAME")
+    password = os.getenv("AZURE_SQL_PASSWORD", "")
+    driver = _env("AZURE_SQL_DRIVER", "ODBC Driver 18 for SQL Server")
+    encrypt = _env("AZURE_SQL_ENCRYPT", "yes")
+    trust_cert = _env("AZURE_SQL_TRUST_SERVER_CERTIFICATE", "no")
+    timeout = _env("AZURE_SQL_CONNECTION_TIMEOUT", "30")
+
+    options = [
+        f"DRIVER={{{driver}}}",
+        f"SERVER=tcp:{server},1433",
+        f"DATABASE={database}",
+        f"UID={username}",
+        f"PWD={password}",
+        f"Encrypt={encrypt}",
+        f"TrustServerCertificate={trust_cert}",
+        f"Connection Timeout={timeout}",
+    ]
+    odbc = ";".join(options) + ";"
     return f"mssql+pyodbc:///?odbc_connect={quote_plus(odbc)}"
 
 

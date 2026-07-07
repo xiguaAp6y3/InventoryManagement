@@ -1,0 +1,6 @@
+# Replace api.example.com with your real domain.
+# If you only have a public IP and no domain, use ":80" instead.
+api.example.com {
+	reverse_proxy 127.0.0.1:5000
+}
+
