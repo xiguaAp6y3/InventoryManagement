@@ -55,9 +55,13 @@ Caddy 会自动申请 HTTPS 证书，所以路由器和防火墙需要开放：
 443/tcp
 ```
 
-如果暂时只有公网 IP、没有域名，使用 HTTP：
+如果暂时只有公网 IP、没有域名，使用 HTTP。项目默认 `Caddyfile` 已经是这个模式：
 
 ```caddyfile
+{
+	default_bind 0.0.0.0
+}
+
 :80 {
 	reverse_proxy 127.0.0.1:5000
 }
@@ -68,6 +72,8 @@ Caddy 会自动申请 HTTPS 证书，所以路由器和防火墙需要开放：
 ```text
 http://你的公网IP/api/health
 ```
+
+更多模板见项目根目录的 `Caddyfile.example`。
 
 ## 4. 启动 Caddy
 
@@ -107,6 +113,8 @@ New-NetFirewallRule -DisplayName "Caddy HTTP" -Direction Inbound -Protocol TCP -
 New-NetFirewallRule -DisplayName "Caddy HTTPS" -Direction Inbound -Protocol TCP -LocalPort 443 -Action Allow
 ```
 
+如果 `netstat -ano` 看到 `127.0.0.1:80 LISTENING`，说明只监听本机；重新启动 Caddy 后应看到 `0.0.0.0:80 LISTENING`。
+
 ## 7. 验证
 
 ```powershell
@@ -119,4 +127,3 @@ curl http://你的公网IP/api/health
 ```powershell
 curl https://api.example.com/api/health
 ```
-

@@ -1,0 +1,31 @@
+# Option A: Public IP only, HTTP
+# Visit: http://your-public-ip/api/health
+{
+	default_bind 0.0.0.0
+}
+
+:80 {
+	reverse_proxy 127.0.0.1:5000
+}
+
+# Option B: Domain name, automatic HTTPS
+# 1. Point api.example.com A record to your public IP.
+# 2. Open ports 80 and 443.
+# 3. Use only this block in your real Caddyfile.
+#
+# api.example.com {
+# 	reverse_proxy 127.0.0.1:5000
+# }
+
+# Option C: Reverse proxy with basic security headers
+# Replace api.example.com with your real domain.
+#
+# api.example.com {
+# 	header {
+# 		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+# 		X-Content-Type-Options "nosniff"
+# 		X-Frame-Options "DENY"
+# 		Referrer-Policy "no-referrer"
+# 	}
+# 	reverse_proxy 127.0.0.1:5000
+# }
